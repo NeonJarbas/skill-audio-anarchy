@@ -63,7 +63,7 @@ class AudioAnarchySkill(OVOSCommonPlaybackSkill):
             "image": book.img,
             "bg_image": book.img,
             "skill_icon": self.skill_icon,
-            "title": str(book.title) + f" (part {ch + 1})",
+            "title": s.split("/")[-1].split(".")[0].replace("_", " "),
             "skill_id": self.skill_id
         } for ch, s in enumerate(book.streams)]
 

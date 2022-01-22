@@ -4,7 +4,7 @@ from audiobooker.scrappers.audioanarchy import AudioAnarchy
 from ovos_plugin_common_play.ocp import MediaType, PlaybackType
 from ovos_utils.parse import fuzzy_match, MatchStrategy
 from ovos_workshop.skills.common_play import OVOSCommonPlaybackSkill, \
-    ocp_search
+    ocp_search, ocp_featured_media
 
 
 class AudioAnarchySkill(OVOSCommonPlaybackSkill):
@@ -25,7 +25,7 @@ class AudioAnarchySkill(OVOSCommonPlaybackSkill):
 
     # common play
     @ocp_search()
-    def search_stephenking_audiobooks(self, phrase, media_type):
+    def search_audio_anarchy_audiobooks(self, phrase, media_type):
         # match the request media_type
         base_score = 0
         if media_type == MediaType.AUDIOBOOK:
@@ -41,18 +41,19 @@ class AudioAnarchySkill(OVOSCommonPlaybackSkill):
         loyalbooks = AudioAnarchy()
 
         results = loyalbooks.search_audiobooks(title=phrase)
-        for book in self._yield_results(phrase, results, base_score):
-            yield book
-
-    def _yield_results(self, phrase, results, base_score=0):
         for idx, book in enumerate(results):
             score = self.calc_score(phrase, book, idx=idx,
                                     base_score=base_score)
             yield self._book2ocp(book, score)
 
-    def _book2ocp(self, book, score):
+    @ocp_featured_media()
+    def featured_media(self):
+        for book in AudioAnarchy().scrap_popular():
+            yield self._book2ocp(book)
+
+    def _book2ocp(self, book, score=50):
         author = " ".join([au.first_name + au.last_name for au in
-                            book.authors])
+                           book.authors])
         pl = [{
             "match_confidence": score,
             "media_type": MediaType.AUDIOBOOK,

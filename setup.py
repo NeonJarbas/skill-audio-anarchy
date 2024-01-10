@@ -14,7 +14,7 @@ setup(
     author_email='jarbasai@mailfence.com',
     license='Apache-2.0',
     package_dir={"skill_audio_anarchy": ""},
-    package_data={'skill_audio_anarchy': ['locale/*', 'res/*', 'ui/*']},
+    package_data={'skill_audio_anarchy': ['locale/*', 'res/*', 'res/*']},
     packages=['skill_audio_anarchy'],
     include_package_data=True,
     install_requires=["ovos_workshop~=0.0.5a1"],
